@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="d-flex flex-wrap">
-    <span v-if="showBadges" v-for="(it, i) in selected" class="badge bg-light me-2 py-1 my-2" :key="`multi-${i}`">
-      {{ typeof it === "string" ? it : it.name || it.text }}
-      <i class="fas fa-times text-danger ms-2 me-2 cursor-pointer" @click="()=>removeOption(it) "/>
-    </span>
+      <span v-if="showBadges" v-for="(it, i) in selected" class="badge bg-light me-2 py-1 my-2" :key="`multi-${i}`">
+        {{ typeof it === "string" ? it : it.name || it.text }}
+        <i class="fas fa-times text-danger ms-2 me-2 cursor-pointer" @click="()=>removeOption(it) "/>
+      </span>
       <template v-if="max === -1 || max === 1 || ( Array.isArray(selected) && selected.length < max )">
 
         <div v-if="createOptions" class="d-flex">
-          <input type="text" class="form-control" placeholder="category" v-model="selection" v-on:keyup.enter="inputChanged">
+          <input type="text" :class="`form-control ${inputClass}`" :placeholder="text" v-model="selection" v-on:keyup.enter="inputChanged">
           <button class="btn btn-outline-primary waves-effect d-flex ms-2" @click="inputChanged">
             <i class="fa fa-plus mt-1 me-2"/>
             <span class="me-2">Add</span>
@@ -18,7 +18,7 @@
 
           <div @click="toggle" class="d-flex">
             <i v-if="icon" :class="icon" style="position: absolute; padding-left: 15px; top: 29px;"/>
-            <input type="text" class="form-control" :placeholder="text" v-model="selection" v-on:keyup.enter="inputChanged" />
+            <input type="text" :class="`form-control ${inputClass}`" :placeholder="text" v-model="selection" v-on:keyup.enter="inputChanged" />
             <i v-if="showChevron" class="fas fa-chevron-down"></i>
             <div v-if="filteredOptions.length" :class="`dropdown-menu dropdown-menu-end ${showMenu ? 'show': ''}`">
               <button v-for="(it, key) in filteredOptions" :key="`multiselect-option-${key}`"
@@ -50,6 +50,7 @@ export default {
     createOptions: {default: false},
     showChevron: {default: true},
     icon : {default: ""},
+    inputClass: {default: ""}
   },
 
   data(){
@@ -86,6 +87,7 @@ export default {
       this.$emit('remove', it)
     },
     inputChanged(){
+
       for (const it of this.filteredOptions)
         if (it.text === this.selection ){
           this.$emit('add', it)
@@ -93,9 +95,12 @@ export default {
           return
         }
 
-      this.$emit('add', this.selection)
-      this.selection = ""
-      this.closeMenu()
+      if (this.createOptions){
+        this.$emit('add', this.selection)
+        this.selection = ""
+        this.closeMenu()
+      }
+
     },
     selectChanged(it){
       this.$emit('add',it)

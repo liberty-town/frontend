@@ -1,5 +1,5 @@
 <template>
-  <div class="card h-100">
+  <div class="card">
     <div class="card-body">
 
       <div class="row">
@@ -14,9 +14,9 @@
               <span v-if="listing.type.eq(0)" class="badge bg-success me-2 p-2 text-white">BUY</span>
               <span v-else-if="listing.type.eq(1)" class="badge bg-primary me-2 p-2 text-white">SALE</span>
             </div>
-            <div class="" v-if="listing.categories && $store.state.federations.dict[listing.federationIdentity]">
-              <router-link v-for="(c, key) in listing.categories" :key="key" class="badge bg-black text-white p-2 me-1" :to="{ path: '/listings/search/'+ ($store.state.federations.dict[listing.federationIdentity].categoriesDict[c] ? $store.state.federations.dict[listing.federationIdentity].categoriesDict[c].name : ''), query: { queryType: 'category'} }"  >
-                {{  $store.state.federations.dict[listing.federationIdentity].categoriesDict[c] ? $store.state.federations.dict[listing.federationIdentity].categoriesDict[c].name : "invalid category" }}
+            <div class="" v-if="listing.categories && $store.state.federations.dict[listing.federation]">
+              <router-link v-for="(c, key) in listing.categories" :key="key" class="badge bg-black text-white p-2 me-1" :to="{ path: '/listings/search/'+ c, query: { queryType: 'category'} }"  >
+                {{  $store.state.federations.dict[listing.federation].categoriesDict[c] ? $store.state.federations.dict[listing.federation].categoriesDict[c].name : "invalid category" }}
               </router-link>
             </div>
           </div>

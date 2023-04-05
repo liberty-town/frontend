@@ -4,8 +4,8 @@
     <div class="navbar-header">
       <div class="d-flex">
 
-        <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect header-navbar" @click="() => $emit('toggleMainMenu')">
-          <i class="d-block d-lg-none fa fa-fw fa-bars"></i>
+        <button type="button" class="d-block d-lg-none  btn btn-sm ps-3 font-size-16 header-item waves-effect header-navbar" @click="() => $emit('toggleMainMenu')">
+          <i class="fa fa-fw fa-bars"></i>
         </button>
 
         <div class="menuLogo">
@@ -33,7 +33,7 @@
       </div>
       <div class="d-flex">
 
-        <nav-bar-search ref="navBarSearch"/>
+        <nav-bar-search/>
 
         <div class="dropdown d-inline-block" @click="() => $refs.navBarAccountMenu.toggleShowMenu()">
           <button type="button" class="btn header-item waves-effect" >
@@ -88,6 +88,12 @@ export default {
   width: 70px;
 }
 
+@media screen and (max-width: 480px) {
+  .header-navbar {
+    width: 40px;
+  }
+}
+
 [data-layout-mode="dark"] .header-navbar{
   border-right: solid 2px #292f41;
 }
@@ -102,6 +108,8 @@ export default {
   vertical-align: top;
 }
 
-
+button{
+  border: none;
+}
 
 </style>

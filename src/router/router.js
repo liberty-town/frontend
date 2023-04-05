@@ -3,6 +3,9 @@ import {createRouter, createWebHistory} from "vue-router"
 import ListingsAdd from "src/views/listings/add"
 import ListingsView from "src/views/listings/view"
 import ListingsSearch from "src/views/listings/search"
+import ThreadsAdd from "src/views/threads/add"
+import ThreadsView from "src/views/threads/view"
+import ThreadsSearch from "src/views/threads/search"
 import AccountsAdd from "src/views/accounts/add"
 import AccountsView from "src/views/accounts/view"
 import ReviewsAdd from "src/views/reviews/add"
@@ -18,6 +21,11 @@ const routes = [
     {path: '/', component: ListingsSearch },
     {path: '/listings/search', component: ListingsSearch },
     {path: '/listings/search/:query', component: ListingsSearch },
+    {path: '/forum/add', component: ThreadsAdd },
+    {path: '/forum/view/:query', component: ThreadsView },
+    {path: '/forum', component: ThreadsSearch },
+    {path: '/forum/search/:query', component: ThreadsSearch },
+    {path: '/forum/search', component: ThreadsSearch },
     {path: '/accounts/add', component: AccountsAdd },
     {path: '/accounts/view/:query', component: AccountsView },
     {path: '/reviews/add', component: ReviewsAdd },

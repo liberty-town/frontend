@@ -150,7 +150,7 @@
 
         <alert-box class="mt-4" v-if="issues">{{issues}}</alert-box>
 
-        <div class="col-12 d-flex justify-content-end mt-4" >
+        <div class="col-12 d-flex justify-content-end mt-4" v-if="!this.loading">
           <loading-button :submit="submitUpdateAccountSummary" text="Update Account Summary" icon="fa fa-pencil" class="me-2" :disabled="!!issues"/>
           <loading-button :submit="submitUpdateListingSummary" text="Update Listing Summary" icon="fa fa-pencil" class="me-2" :disabled="!!issues || !listing "/>
           <loading-button :submit="submitAddReview" text="Add Review" icon="fa fa-pencil" :disabled="!!issues" />
@@ -312,8 +312,8 @@ export default {
       const data = JSONParse( MyTextDecode( await LibertyTown.reviews.store( JSONStringify({
         score: score,
         text: this.text,
-        listingIdentity: this.listing || null,
-        accountIdentity: this.account || null,
+        listing: this.listing || null,
+        account: this.account || null,
         amount: this.updateAmount.amount,
       }), (data) => this.$store.state.page.validatorModal.showModal(data) ) ))
 

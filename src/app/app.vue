@@ -31,7 +31,6 @@ export default {
 
     async start() {
 
-
       LibertyTown.events.listenEvents(async (name, data) => {
 
         if (data instanceof ArrayBuffer) data = new Uint8Array(data)

@@ -1,4 +1,4 @@
-onst localforage = require('localforage');
+const localforage = require('localforage');
 
 module.exports = class BrowserStorage {
 

@@ -15,7 +15,7 @@
                 <div class="col-md-6">
                   <div class="product-detai-imgs">
                     <div class="row">
-                      <div class="img-fluid" :alt="listing.title"
+                      <div class="img-fluid"
                            :style="`background-image: url('${listing.images.length ? listing.images[0] : '/assets/image-not-available.png'}');`" />
                     </div>
                     <div class="category-container d-flex">
@@ -26,7 +26,7 @@
                       <div class="" v-if="listing.categories">
                         <router-link v-for="(c, key) in listing.categories" :key="key" class="badge bg-black me-1 text-black p-2 text-white"
                                      :to="{path: '/listings/search/'+c, query: { queryType: 'category'} }"  >
-                          {{  $store.state.federations.dict[listing.federationIdentity].categoriesDict[c] ? $store.state.federations.dict[listing.federationIdentity].categoriesDict[c].name : "invalid category" }}
+                          {{  $store.state.federations.dict[listing.federation].categoriesDict[c] ? $store.state.federations.dict[listing.federation].categoriesDict[c].name : "invalid category" }}
                         </router-link>
                       </div>
                     </div>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                       <span class="text-muted">
-                        Published
+                        Last update
                         <span>{{new Date(listing.ownership.timestamp*1000).toDateString() }}</span>
                       </span>
                     </div>
@@ -126,26 +126,6 @@
 
               <hr class="border-top">
 
-              <div>
-                <h5>Listing Reviews</h5>
-                <show-reviews v-if="reviewsListing.length" :list="reviewsListing"/>
-                <loading-spinner v-if="reviewsListingLoading"/>
-                <span v-else-if="!reviewsListing.length">None</span>
-
-                <loading-button v-if="!reviewsListingFinished && reviewsListingStart.gt(0)" :submit="loadMoreReviewsListing" text="Load more" icon="fa fa-download" class="btn-secondary mt-3"/>
-              </div>
-
-              <hr class="border-top">
-
-              <div>
-                <h5>Account Reviews</h5>
-                <show-reviews v-if="reviewsAccountAvoidDuplicates.length" :list="reviewsAccountAvoidDuplicates"/>
-                <loading-spinner v-if="reviewsAccountLoading"/>
-                <span v-else-if="!reviewsAccount.length">None</span>
-
-                <loading-button v-if="!reviewsAccountFinished && reviewsAccountStart.gt(0)" :submit="loadMoreReviewsAccount" text="Load more" icon="fa fa-download" class="btn-secondary mt-3"/>
-              </div>
-
               <div class="d-flex flex-column flex-sm-row pt-3" v-if="(listing.publisher.address === $store.state.page.settings.account.address) || $store.getters.isFederationModerator" >
                 <router-link v-if="listing.publisher.address === $store.state.page.settings.account.address"
                              :to="`/listings/update/${listing.identity}`" class="btn btn-primary btn-cart mx-1 me-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light">
@@ -158,6 +138,26 @@
                   <i class="fa fa-comments-dollar me-2"/>
                   <span class="add-to-cart">Leave review</span>
                 </router-link>
+              </div>
+
+              <div>
+                <h5>Listing Reviews</h5>
+                <show-reviews v-if="reviewsListing.length" :list="reviewsListing"/>
+                <loading-spinner v-if="reviewsListingLoading"/>
+                <span v-else-if="!reviewsListing.length">None</span>
+
+                <loading-button v-if="!reviewsListingFinished && reviewsListingStart.gt(0)" :submit="() => this.loadMoreReviews(1)" text="Load more listing reviews" icon="fa fa-download" class="btn-secondary mt-3"/>
+              </div>
+
+              <hr class="border-top">
+
+              <div>
+                <h5>Account Reviews</h5>
+                <show-reviews v-if="reviewsAccountAvoidDuplicates.length" :list="reviewsAccountAvoidDuplicates"/>
+                <loading-spinner v-if="reviewsAccountLoading"/>
+                <span v-else-if="!reviewsAccount.length">None</span>
+
+                <loading-button v-if="!reviewsAccountFinished && reviewsAccountStart.gt(0)" :submit="() => this.loadMoreReviews(0)" text="Load more account reviews" icon="fa fa-download" class="btn-secondary mt-3"/>
               </div>
 
             </template>
@@ -183,12 +183,13 @@ import InputAmount from "../../components/input-amount";
 import Amount from "../../components/amount";
 import LoadingButton from "src/components/utils/loading-button";
 import ViewListingReport from "./view-listing-report";
+import ThreadsSearchBar from "../threads/threads-search-bar";
 
 export default {
 
   components: {
     ViewListingReport, Amount, AccountIdenticon, Stars, Layout, ShowReviews, AlertBox, LoadingSpinner, InputAmount,
-    LoadingButton},
+    LoadingButton, ThreadsSearchBar},
 
   data(){
     return {
@@ -257,7 +258,7 @@ export default {
 
         if (!data) throw "Listing was not found"
 
-        if (!this.$store.state.federations.dict[data.federationIdentity])
+        if (!this.$store.state.federations.dict[data.federation])
           throw "listing federation is invalid"
 
         this.listing = data
@@ -313,35 +314,29 @@ export default {
       }
     },
 
-    async loadMoreReviewsListing(){
+    async loadMoreReviews(type = 0){
+
+      let name = 'Account'
+      let identity = this.listing.publisher.address
+      if (type === 1) {
+        name = 'Listing'
+        identity = this.query
+      }
 
       const count = await LibertyTown.reviews.getAll( JSONStringify({
-        identity: this.query,
-        type: 1,
-        start: this.reviewsListingStart,
+        identity,
+        type,
+        start: this[`reviews${name}Start`],
       }), (data)=>{
         const it = JSONParse( MyTextDecode(data))
-        this.reviewsListing.push(it)
+        this[`reviews${name}`].push(it)
       })
 
-      this.reviewsListingStart = this.reviewsListingStart.plus(count)
-      this.reviewsListingFinished = count < LibertyTown.config.REVIEWS_LIST_COUNT
+      this[`reviews${name}Start`] = this[`reviews${name}Start`].plus(count)
+      this[`reviews${name}Finished`] = count < LibertyTown.config.REVIEWS_LIST_COUNT
     },
 
-    async loadMoreReviewsAccount(){
 
-      const count = await LibertyTown.reviews.getAll( JSONStringify({
-        identity: this.listing.publisher.address,
-        type: 0,
-        start: this.reviewsAccountStart,
-      }), (data)=>{
-        const it = JSONParse( MyTextDecode( data ))
-        this.reviewsAccount.push(it)
-      })
-
-      this.reviewsAccountStart = this.reviewsAccountStart.plus(count)
-      this.reviewsAccountFinished = count < LibertyTown.config.REVIEWS_LIST_COUNT
-    },
 
   },
 

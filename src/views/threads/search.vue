@@ -2,19 +2,11 @@
 <template>
   <layout>
 
-    <div class="row" v-if="type === 'sell'">
-      <div class="d-flex flex-grow-1 justify-content-center align-items-center mb-2">
-        <div class="alert alert-primary" role="alert">
-          INFO: If you don't find what you are looking, you can <router-link to="/listings/add">ADD YOUR BUY REQUEST</router-link>.
-        </div>
-      </div>
-    </div>
-
-    <div class="row" style="min-height: 500px;">
-      <listings-search-bar/>
+    <div class="row" >
+      <threads-search-bar/>
 
       <div class="col-lg-9">
-        <show-listings v-if="list.length" :list="list" />
+        <show-threads v-if="list.length" :list="list" />
         <div v-if="loading" class="text-center my-3">
           <loading-spinner class="fa-2x"/>
         </div>
@@ -26,13 +18,13 @@
 
 <script>
 import Layout from "src/views/layout/layout"
-import ShowListings from "./show-listings";
 import LoadingSpinner from "../../components/utils/loading-spinner";
 import LoadingButton from "src/components/utils/loading-button";
-import ListingsSearchBar from "./listings-search-bar";
+import ShowThreads from "./show-threads";
+import ThreadsSearchBar from "./threads-search-bar";
 
 export default {
-  components: {ListingsSearchBar, ShowListings, Layout, LoadingSpinner, LoadingButton},
+  components: {ThreadsSearchBar, ShowThreads, Layout, LoadingSpinner, LoadingButton},
 
   data(){
     return {
@@ -50,10 +42,6 @@ export default {
       return (this.$route.params.query||'').toLowerCase();
     },
 
-    type(){
-      return (this.$route.query.type||'sell').toLowerCase();
-    },
-
     queryType(){
       return (this.$route.query.queryType||'title').toLowerCase();
     },
@@ -64,30 +52,24 @@ export default {
     async load(){
 
       this.$store.commit('setPage',{
-        title: "Search",
+        title: "Forum",
       })
 
       let query = this.query.trim()
 
-      let type, queryType
+      let queryType
 
       if (this.queryType === 'title') {
         queryType = Decimal_0
         query = query.split(" ")
       }
-      else if (this.queryType === 'category') {
+      else if (this.queryType === 'keyword') {
         queryType = Decimal_1
-        query = query.toLowerCase()
-        if (this.$store.getters.selectedFederation.categoriesDict[query])
-          query = [ this.$store.getters.selectedFederation.categoriesDict[query].value.toString() ]
+        query = [ query.toLowerCase() ]
       }
-
-      if (this.type === 'buy') type = 0
-      else if (this.type === 'sell') type = 1
 
       const queryObject = {
         query,
-        type,
         queryType,
       }
 
@@ -106,7 +88,7 @@ export default {
       try{
         this.loading = true
 
-        const count = await LibertyTown.listings.search( JSONStringify({
+        const count = await LibertyTown.threads.search( JSONStringify({
           ...queryObject,
           start: this.start,
         }), data =>{
@@ -114,13 +96,13 @@ export default {
           const it = JSONParse(MyTextDecode(data))
 
           if (this.queryStr === queryStr)
-              this.list.push(it)
+            this.list.push(it)
 
         } )
 
         if (this.queryStr === queryStr) {
           this.start = this.start.plus(count)
-          if (count < LibertyTown.config.LISTINGS_LIST_COUNT) this.finished = true
+          if (count < LibertyTown.config.THREADS_LIST_COUNT) this.finished = true
         }
 
       }catch(e){
@@ -129,6 +111,13 @@ export default {
       }finally{
         if (this.queryStr === queryStr) this.loading = false
       }
+    },
+
+    queryTypeChanged(e){
+      this.$router.push({path: '/forum/search/'+this.query, query: {
+          ...this.$route.query,
+          queryType: e.target.value,
+        } })
     },
 
     infiniteScroll(){

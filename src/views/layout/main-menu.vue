@@ -12,7 +12,7 @@
 
                     <li>
 
-                      <a href="javascript: void(0);" class="waves-effect" @click="toggleListings">
+                      <a href="javascript: void(0);" class="waves-effect" @click="toggleListings" style="cursor: default">
                         <i class="fa fa-shopping-bag"></i>
                         <span key="t-file-manager">Listings</span>
                         <i :class="`d-block d-lg-none fas fa-chevron-${menu.listings ? 'up' : 'down'} fs-5`" style="float: right"/>
@@ -35,8 +35,33 @@
                     </li>
 
                     <li>
+
+                      <a href="javascript: void(0);" class="waves-effect" @click="toggleForum" style="cursor: default">
+                        <i class="fa fa-comments"></i>
+                        <span key="t-file-manager">Forum</span>
+                        <i :class="`d-block d-lg-none fas fa-chevron-${menu.forum ? 'up' : 'down'} fs-5`" style="float: right"/>
+                      </a>
+
+                      <ul :class="`sub-menu mm-collapse ${menu.forum ? 'mm-show' : '' }`">
+
+                        <li>
+                          <router-link to="/forum" class="waves-effect">
+                            <span key="t-file-manager">View Threads</span>
+                          </router-link>
+                        </li>
+                        <li>
+                          <router-link to="/forum/add" class="waves-effect">
+                            <span key="t-file-manager">Add new thread</span>
+                          </router-link>
+                        </li>
+
+                      </ul>
+
+                    </li>
+
+                    <li>
                       <router-link to="/chat" class="waves-effect">
-                        <i class="fa fa-comments-dollar"></i>
+                        <i class="fa fa-message"></i>
                         <span key="t-file-manager">Encrypted Chat</span>
                       </router-link>
                     </li>
@@ -50,7 +75,7 @@
 
                     <li>
 
-                      <a href="javascript: void(0);" class="waves-effect" @click="toggleSupport">
+                      <a href="javascript: void(0);" class="waves-effect" @click="toggleSupport" style="cursor: default">
                         <i class="fa fa-headset"></i>
                         <span key="t-file-manager">Support</span>
                         <i :class="`d-block d-lg-none fas fa-chevron-${menu.support ? 'up' : 'down'} fs-5`" style="float: right"/>
@@ -108,6 +133,7 @@ export default {
       menu: {
         support: true,
         listings: true,
+        forum: true,
       },
     }
   },
@@ -123,6 +149,12 @@ export default {
       e.stopPropagation()
       this.menu.support =  ! this.menu.support
     },
+
+    toggleForum(e){
+      e.stopPropagation()
+      this.menu.forum =  ! this.menu.forum
+    },
+
   },
 
 }

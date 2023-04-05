@@ -26,8 +26,9 @@
           <div class="row">
             <label class="col-sm-4 col-form-label">Title</label>
             <div class="col-sm-8">
-              <input type="text" :class="`form-control ${title.length < LibertyTown.config.LISTING_TITLE_MIN_LENGTH ? 'is-invalid': ''}`" placeholder="these words are being used by the decentralized search" v-model="title">
+              <input type="text" :class="`form-control ${title.length < LibertyTown.config.LISTING_TITLE_MIN_LENGTH || title.length > LibertyTown.config.LISTING_TITLE_MAX_LENGTH ? 'is-invalid': ''}`" placeholder="these words are being used by the decentralized search" v-model="title">
               <div v-if="title.length < LibertyTown.config.LISTING_TITLE_MIN_LENGTH" class="invalid-feedback">It must contain at least {{LibertyTown.config.LISTING_TITLE_MIN_LENGTH}} chars.</div>
+              <div v-if="title.length > LibertyTown.config.LISTING_TITLE_MAX_LENGTH" class="invalid-feedback">It should not exceed {{LibertyTown.config.LISTING_TITLE_MAX_LENGTH}} chars.</div>
             </div>
           </div>
 
@@ -44,7 +45,7 @@
             <label class="col-sm-4 form-label">Categories</label>
             <div class="col-sm-8">
               <multiselect :selected="categories" @add="it => categories.push(it)" text="Select category"
-                           :options="$store.state.federations.dict[this.federationIdentity||$store.state.federations.selected].categoriesList"
+                           :options="$store.state.federations.dict[this.federation||$store.state.federations.selected].categoriesList"
                            @remove="it => categories.splice(categories.indexOf(it), 1)"
                            :max="LibertyTown.config.LISTING_CATEGORIES_MAX_COUNT"/>
             </div>
@@ -62,7 +63,7 @@
             <div class="row mt-3" v-if="images.length < LibertyTown.config.LISTING_IMAGES_MAX_COUNT || images.length > 1">
               <div class="col-12 d-flex justify-content-end">
                 <loading-button :submit="newImage" text="Add Image" icon="fa fa-image" class-custom="btn btn-outline-primary waves-effect"/>
-                <button v-if="images.length" @click="images.splice(shipping.length-1, 1)" type="button" class="btn btn-outline-primary waves-effect ms-2"><i class="fas fa-times text-danger me-2"/>Remove Last Image</button>
+                <button v-if="images.length" @click="images.splice(images.length-1, 1)" type="button" class="btn btn-outline-primary waves-effect ms-2"><i class="fas fa-times text-danger me-2"/>Remove Last Image</button>
               </div>
             </div>
           </template>
@@ -198,7 +199,7 @@ export default {
       type: "sell",
       images: [],
       categories: [],
-      federationIdentity: "",
+      federation: "",
       offers: [{amount: "", price: { amount: Decimal_1,  amountValidationError: "", }, priceInit: Decimal_1 }],
       quantityAvailable: Decimal_1,
       quantityUnlimited: true,
@@ -235,7 +236,7 @@ export default {
           else if (data.type.eq(1)) this.type = "sell"
           else throw "invalid type"
 
-          this.federationIdentity = data.federationIdentity
+          this.federation = data.federation
           this.title = data.title
           this.description = data.description
           this.quantityUnlimited = data.quantityUnlimited
@@ -243,7 +244,7 @@ export default {
           this.shipsFrom = this.$countries.getMultiset(data.shipsFrom)
           this.shipsTo = data.shipsTo.map(it => this.$countries.getMultiset(it) )
           this.images = [...data.images]
-          this.categories = data.categories.map( it => this.$store.state.federations.dict[data.federationIdentity||this.$store.state.federations.selected].categoriesDict[it] )
+          this.categories = data.categories.map( it => this.$store.state.federations.dict[data.federation||this.$store.state.federations.selected].categoriesDict[it] )
           this.offers = data.offers.map(it => ({amount: it.amount, price: {amount: it.price }, priceInit: it.price }))
           this.shipping = data.shipping.map(it => ({option: it.option, price: {amount: it.price }, priceInit: it.price }))
         }
