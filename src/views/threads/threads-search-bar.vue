@@ -45,8 +45,7 @@ export default {
 
   data(){
     return {
-      query:( this.$route.params.query||'').toLowerCase(),
-      queryType: (this.$route.query.queryType||'title').toLowerCase(),
+      ...this.update(),
     }
   },
 
@@ -54,13 +53,20 @@ export default {
     $route: {
       handler(val, oldVal) {
         if (val === oldVal) return
-        this.query = ( this.$route.params.query||'').toLowerCase()
-        this.queryType = (this.$route.query.queryType||'title').toLowerCase()
+        const x = this.update(val)
+        for (const key in x )
+          this[key] = x[key]
       }
     },
   },
 
   methods:{
+    update(val = this.$route) {
+      return {
+        query: ( val.params.query||'').toLowerCase(),
+        queryType: (val.query.queryType||'title').toLowerCase(),
+      }
+    },
     find(){
       return this.$router.push({path: `/forum/search/${ this.query.trim()}`, query: { queryType: this.queryType }})
     }

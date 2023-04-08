@@ -19,7 +19,7 @@
             <label class="col-md-2 col-form-label">Country</label>
             <div class="col-md-10">
 
-              <multiselect :selected="country" :max="1" :options="$countries.sorted.map( it => ({text: it.name, value: it.index}) )"
+              <multiselect :selected="country" :max="1" :options="$countries.sortedMultiselect"
                            @add="it => country = it" :show-badges="false" :text="country ? country.text : 'optional'" />
 
             </div>

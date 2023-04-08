@@ -126,7 +126,7 @@
 
               <hr class="border-top">
 
-              <div class="d-flex flex-column flex-sm-row pt-3" v-if="(listing.publisher.address === $store.state.page.settings.account.address) || $store.getters.isFederationModerator" >
+              <div class="d-flex flex-column flex-sm-row pb-3" v-if="(listing.publisher.address === $store.state.page.settings.account.address) || $store.getters.isFederationModerator" >
                 <router-link v-if="listing.publisher.address === $store.state.page.settings.account.address"
                              :to="`/listings/update/${listing.identity}`" class="btn btn-primary btn-cart mx-1 me-sm-1 mb-1 mb-sm-0 waves-effect waves-float waves-light">
                   <i class="fa fa-pencil me-2"/>

@@ -313,6 +313,8 @@ export default {
           const data = await MyTextEncode(JSONStringify({invoice: out.invoice}))
           const serialized = Buffer.from( await LibertyTown.invoices.serialize(data) )
 
+          console.log(serialized.length, "vs", data.length )
+
           this.attachment = {
             receiver: this.receiver,
             type: new Decimal(3),

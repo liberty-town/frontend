@@ -85,10 +85,20 @@ export default {
       if (this.type === 'buy') type = 0
       else if (this.type === 'sell') type = 1
 
+      let shippingType = 0, shipping = 0
+      if (typeof this.$route.query.shipping !== "undefined" ){
+        shipping = Number.parseInt(this.$route.query.shipping || 244 )
+        let shippingTypeQuery = this.$route.query.shippingType || 'to'
+        if (shippingTypeQuery === 'from') shippingType = 1
+        if (!shippingTypeQuery || shippingTypeQuery === 'to') shippingType = 2
+      }
+
       const queryObject = {
         query,
         type,
         queryType,
+        shippingType,
+        shipping,
       }
 
       const queryStr = JSONStringify(queryObject)
@@ -113,8 +123,8 @@ export default {
 
           const it = JSONParse(MyTextDecode(data))
 
-          if (this.queryStr === queryStr)
-              this.list.push(it)
+          if (this.queryStr === queryStr )
+            this.list.push(it)
 
         } )
 
@@ -140,18 +150,12 @@ export default {
   },
 
   watch: {
-    query:{
+    $route: {
       handler(val, oldVal) {
         if (val === oldVal) return
-        this.load()
+        return this.load()
       }
     },
-    type: {
-      handler(val, oldVal) {
-        if (val === oldVal) return
-        this.load()
-      }
-    }
   },
 
   async mounted(){

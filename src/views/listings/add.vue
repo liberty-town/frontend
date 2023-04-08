@@ -87,7 +87,7 @@
             <label class="col-sm-4 form-label">Ships from</label>
             <div class="col-sm-8">
 
-              <multiselect :selected="shipsFrom" :max="1" :options="$countries.sorted.map( it => ({text: it.name, value: it.index}) )"
+              <multiselect :selected="shipsFrom" :max="1" :options="$countries.sortedMultiselect"
                            @add="it => shipsFrom = it" :show-badges="false" :text="shipsFrom ? shipsFrom.text : 'select country'" />
 
             </div>
@@ -96,7 +96,7 @@
           <div class="row mt-3">
             <label class="col-sm-4 form-label">Ships to</label>
             <div class="col-sm-8">
-              <multiselect :selected="shipsTo" :options="$countries.sorted.map( it => ({text: it.name, value: it.index}) )"
+              <multiselect :selected="shipsTo" :options="$countries.sortedMultiselect"
                            @add="it => shipsTo.push(it)" @remove="it => shipsTo.splice(shipsTo.indexOf(it), 1)"
                            :min="1"
                            :max="LibertyTown.config.LISTING_SHIPPING_TO_MAX_COUNT" text="Select Country"/>
