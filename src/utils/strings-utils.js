@@ -55,6 +55,10 @@ export default {
         return Math.floor(seconds) + (longVersion? " seconds": ' s');
     },
 
+    formatTime (date) {
+        return new Date(date).toDateString()
+    },
+
     formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
         try {
             decimalCount = Math.abs(decimalCount);

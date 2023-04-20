@@ -1,5 +1,5 @@
 <template>
-  <modal ref="modal" title="Are you human?" class="modal-validator">
+  <modal ref="modal" title="Are you human?" class="modal-validator" style="z-index: 1060 !important;">
     <template v-slot:body >
       <div class="" :style="`min-height: ${height}px; min-width: ${width}px; `">
         <iframe :src="uri" id="challengeIframe" title="Solve Challenge" sandbox="allow-scripts" frameborder="0"  :style="`min-height: ${height}px; min-width: ${width}px; `" ></iframe>

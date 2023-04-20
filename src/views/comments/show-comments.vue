@@ -13,9 +13,9 @@
         <span class="font-size-14 mb-1">
           <small class="text-muted float-end">{{$strings.timeSince(new Decimal( it.comment.validation.timestamp.mul(1000) ))}} ago</small>
         </span>
-        <p class="text-muted">
-          {{it.comment.content}}
-        </p>
+        <div class="text-muted">
+          <vue-markdown :source="it.comment.content"/>
+        </div>
       </div>
     </div>
 
@@ -24,9 +24,11 @@
 
 <script>
 import AccountIdenticon from "../../components/utils/account-identicon";
+import VueMarkdown from 'vue-markdown-render'
+
 export default {
 
-  components: {AccountIdenticon},
+  components: {AccountIdenticon, VueMarkdown},
 
   props:  {
     list: {default: null }

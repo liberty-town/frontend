@@ -46,13 +46,19 @@ export default {
 
   methods:{
 
-    showModal(){
+    showModal(cbReady){
       this.promise = new Promise((resolve, reject)=>{
         this.resolve = resolve
       })
 
       this.show = true
       this.$store.commit('setModalVisibility', true )
+
+      if (cbReady) {
+        this.$nextTick(async ()=> {
+          await cbReady()
+        })
+      }
 
       return this.promise
     },

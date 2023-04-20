@@ -123,8 +123,10 @@ export default {
 
           const it = JSONParse(MyTextDecode(data))
 
-          if (this.queryStr === queryStr )
+          if (this.queryStr === queryStr ) {
             this.list.push(it)
+            this.list.sort( (a,b)=> b.score.minus(a.score) )
+          }
 
         } )
 

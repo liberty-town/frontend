@@ -39,7 +39,7 @@
           </div>
 
           <div class="mt-2 row item-actions">
-            <div class="col-12 col-sm-9 row me-1" style="max-width: 500px">
+            <div class="col-12 col-sm-9 row" style="max-width: 500px">
               <div class="d-flex">
 
                 <input-amount :text="null" :allow-zero="false" :init-amount="Decimal_1" :spinner="false" :init-amount-disable="false"
@@ -64,7 +64,7 @@
               </div>
 
             </div>
-            <div class="col-12 col-sm-3 mt-3 mt-sm-0 d-flex align-items-center">
+            <div class="col-12 col-sm-3 mt-3 mt-sm-0 ms-0 d-flex align-items-center">
               <router-link :to="{path: `/chat/conversation/${ listing.publisher.address }`, query: {
                 newOffer: JSONStringify({
                 listing: listing.identity,
@@ -78,6 +78,12 @@
                   <i class="fas fa-shopping-cart me-2 mt-1"></i> {{listing.type.eq(0) ? 'Sell' : 'Buy'}}
                 </button>
               </router-link>
+
+              <button v-if="$store.getters.isFederationModerator" class="btn btn-secondary  light waves-effect waves-light ms-2"
+                      @click="showAddReviewModal">
+                <i class="fa fa-comments-dollar"/>
+              </button>
+
             </div>
 
           </div>
@@ -117,6 +123,19 @@ export default {
         amountValidationError: "",
       },
     }
+  },
+
+  methods:{
+
+    showAddReviewModal() {
+      return this.$store.state.page.addReviewModal.showModal({
+        account: this.listing.publisher.address,
+        listing: this.listing.identity,
+        updateType: this.listing.type.eq(0) ? 'purchase' : 'sale',
+        amount: this.quantity.amount.mul( this.listing.offers[this.selectedOffer].price ).plus( this.listing.shipping.length ? this.listing.shipping[this.selectedShipping].price : Decimal_0 )
+      })
+    },
+
   },
 
 }

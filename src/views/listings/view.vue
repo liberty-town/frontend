@@ -122,7 +122,9 @@
                 <span>Ships to: <b>{{listing.shipsTo.map( it => $countries.getText(it) ).join(', ') }}</b></span>
               </div>
 
-              <p class="text-muted mt-2" style="white-space: pre-line">{{listing.description}}</p>
+              <div class="text-muted mt-2" >
+                <vue-markdown :source="listing.description"/>
+              </div>
 
               <hr class="border-top">
 
@@ -173,6 +175,7 @@
 </template>
 
 <script>
+
 import Layout from "src/views/layout/layout"
 import ShowReviews from "src/views/reviews/show-reviews"
 import Stars from "../reviews/stars";
@@ -184,12 +187,13 @@ import Amount from "../../components/amount";
 import LoadingButton from "src/components/utils/loading-button";
 import ViewListingReport from "./view-listing-report";
 import ThreadsSearchBar from "../threads/threads-search-bar";
+import VueMarkdown from 'vue-markdown-render'
 
 export default {
 
   components: {
     ViewListingReport, Amount, AccountIdenticon, Stars, Layout, ShowReviews, AlertBox, LoadingSpinner, InputAmount,
-    LoadingButton, ThreadsSearchBar},
+    LoadingButton, ThreadsSearchBar, VueMarkdown},
 
   data(){
     return {
@@ -285,6 +289,7 @@ export default {
         }), (data)=>{
           const review = JSONParse(MyTextDecode(data))
           this.reviewsListing.push(review)
+          this.reviewsListing.sort( (a,b)=> b.score.minus(a.score) )
         })
 
         this.reviewsListingStart = new Decimal(count)

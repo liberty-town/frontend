@@ -1,16 +1,15 @@
 <template>
   <div :class="`dropdown-menu dropdown-menu-end ${showMenu ? 'show': ''}`">
 
+    <router-link :to="`/accounts/view/${ $store.state.page.settings.account.address }`"  v-tooltip.left="'View stored account in the federation'" class="dropdown-item">
+      <i class="fas fa-mouse-pointer font-size-16 align-middle me-1"></i>
+      View Account
+    </router-link>
+
     <template v-if="!$store.state.page.accountRegistered" >
       <router-link to="/accounts/add"  v-tooltip.left="'Register account to the federation'" class="dropdown-item" >
         <i class="fas fa-user font-size-16 align-middle me-1 "></i>
         Register account
-      </router-link>
-    </template>
-    <template v-else>
-      <router-link :to="`/accounts/view/${ $store.state.page.settings.account.address }`"  v-tooltip.left="'View stored account in the federation'" class="dropdown-item">
-        <i class="fas fa-mouse-pointer font-size-16 align-middle me-1"></i>
-        View Account
       </router-link>
     </template>
 

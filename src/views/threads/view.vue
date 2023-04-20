@@ -50,7 +50,7 @@
 
                     <div class="mt-4" v-if="thread.type.eq(0)">
                       <div class="text-muted font-size-14">
-                        {{thread.content}}
+                        <vue-markdown :source="thread.content"/>
                       </div>
                     </div>
 
@@ -93,6 +93,7 @@
 </template>
 
 <script>
+
 import Layout from "src/views/layout/layout"
 import ShowReviews from "src/views/reviews/show-reviews"
 import Stars from "../reviews/stars";
@@ -104,11 +105,12 @@ import Amount from "../../components/amount";
 import LoadingButton from "src/components/utils/loading-button";
 import CommentAdd from "src/views/comments/add"
 import ShowComments from "../comments/show-comments";
+import VueMarkdown from 'vue-markdown-render'
 
 export default {
 
   components: {
-    ShowComments,
+    ShowComments, VueMarkdown,
     Amount, AccountIdenticon, Stars, Layout, ShowReviews, AlertBox, LoadingSpinner, InputAmount, CommentAdd,
     LoadingButton},
 

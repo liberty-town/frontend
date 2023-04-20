@@ -2,4 +2,5 @@
 export default {
     name: "LibertyTown",
     debug: false,
+    localhostValidator: false,
 }

@@ -26,6 +26,7 @@ export default {
         viewReviewModal: null,
         shareInformationModal: null,
         changeFederationModal: null,
+        addReviewModal: null,
 
         width: 0,
         height: 0,

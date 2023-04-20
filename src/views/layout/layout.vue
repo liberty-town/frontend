@@ -43,6 +43,7 @@
     <view-review-modal ref="viewReviewModal"/>
     <share-information-modal ref="shareInformationModal"/>
     <change-federation-modal ref="changeFederationModal"/>
+    <add-review-modal ref="addReviewModal"/>
 
     <toasts/>
 
@@ -67,10 +68,14 @@ import LeaveReviewModal from "../chat/review/leave-review-modal";
 import ViewReviewModal from "../chat/review/view-review-modal";
 import ShareInformationModal from "../chat/dispute/share-information-modal";
 import ChangeFederationModal from "./modals/change-federation-modal";
+import AddReviewForm from "../reviews/add-review-form";
+import AddReviewModal from "../reviews/add-review-modal";
 
 export default {
 
   components: {
+    AddReviewModal,
+    AddReviewForm,
     UpdateDisputeModal, ProposeResolutionModal, PayInvoiceModal, ImportAccountModal, ViewDisputeModal, LeaveReviewModal,
     LoadingModal, InputModal, ViewInvoiceModal, Toasts, ValidatorModal, MainMenu, NavBarMenu, CreateInvoiceModal,
     ViewReviewModal, ShareInformationModal, ChangeFederationModal,
@@ -108,6 +113,7 @@ export default {
         viewReviewModal: this.$refs.viewReviewModal,
         shareInformationModal: this.$refs.shareInformationModal,
         changeFederationModal: this.$refs.changeFederationModal,
+        addReviewModal: this.$refs.addReviewModal,
       })
       this.$store.commit('setModalVisibility', false)
     }

@@ -52,6 +52,13 @@
           <h5>Account Summary</h5>
 
           <div class="row mt-3 mt-sm-0">
+            <label class="col-sm-4 col-form-label">Last finalized transaction</label>
+            <div class="col-sm-8">
+              {{ $strings.formatTime(new Decimal(accountSummary.signer.timestamp).mul(1000).toNumber()) }}
+            </div>
+          </div>
+
+          <div class="row mt-3 mt-sm-0">
             <label class="col-sm-4 col-form-label">Sales score</label>
             <div class="col-sm-8">
               <stars :score="accountSummary.salesCount ? accountSummary.salesTotal / accountSummary.salesCount : 0"/>
@@ -215,6 +222,7 @@ export default {
           const it = JSONParse( MyTextDecode(data) )
           it.accountSummary = this.accountSummary
           this.buyListings.push(it)
+          this.buyListings.sort( (a,b)=> b.score.minus(a.score) )
         })
 
         this.buyListingsLoading = false
@@ -228,6 +236,7 @@ export default {
           const it = JSONParse( MyTextDecode(data) )
           it.accountSummary = this.accountSummary
           this.sellListings.push(it)
+          this.sellListings.sort( (a,b)=> b.score.minus(a.score) )
         })
 
         this.sellListingsLoading = false
@@ -271,6 +280,7 @@ export default {
         const it = JSONParse( MyTextDecode(data))
         it.accountSummary = this.accountSummary
         this[name+'Listings'].push(it)
+        this[name+'Listings'].sort( (a,b)=> b.score.minus(a.score) )
       })
 
       this[name+'ListingsStart'] = this[name+'ListingsStart'].plus(count)
@@ -287,6 +297,7 @@ export default {
       }), (data)=>{
         const it = JSONParse( MyTextDecode(data))
         this.reviewsAccount.push(it)
+        this.reviewsAccount.sort( (a,b)=> b.score.minus(a.score) )
       })
 
       this.reviewsAccountStart = this.reviewsAccountStart.plus(count)

@@ -44,6 +44,7 @@ export default {
         state.viewReviewModal = modals.viewReviewModal
         state.shareInformationModal = modals.shareInformationModal
         state.changeFederationModal = modals.changeFederationModal
+        state.addReviewModal = modals.addReviewModal
     },
 
     setModalVisibility(state, modalVisible){

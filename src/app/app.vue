@@ -54,7 +54,7 @@ export default {
 
           this.$store.dispatch('LoadChat')
 
-          if (typeof DEV_SERVER !== "undefined" && !config.debug )
+          if (typeof DEV_SERVER !== "undefined" && config.localhostValidator )
             try{
               const result = await LibertyTown.app.federationReplaceValidatorContactAddresses("LIBERTY16mmFxwUZ7chDm5GBnFvyZDLRFoy5WgBEDNdG3S7jVcaTUYkpzh", "LIBERTY16vqfAtQNmaFSRfggyGkVuLn5rbeGQyiSNHsML9MkZYTurAu2KY", "http://127.0.0.1:4005")
               console.log("result", result)
